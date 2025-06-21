@@ -1,0 +1,31 @@
+name: Deploy Shadowsocks with Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+
+  schedule:
+    - cron: "0 6 * * *"  # يوميًا الساعة 6 صباحًا UTC (9 صباحًا بتوقيت الأردن)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker Image
+      run: docker build -t shadowsocks-server .
+
+    - name: Run Shadowsocks Server
+      run: docker run -d -p 8388:8388 shadowsocks-server
+
+    - name: Start Cloudflare Tunnel
+      run: |
+        chmod +x ./start-cloudflared.sh
+        ./start-cloudflared.sh
