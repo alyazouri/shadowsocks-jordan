@@ -1,0 +1,7 @@
+tunnel: shadowsocks-tunnel
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: pipeline-tracy-lesser-deaths.trycloudflare.com
+    service: http://localhost:8388
+  - service: http_status:404
